@@ -36,6 +36,7 @@ namespace Opm
           solver_time(0.0),
           assemble_time(0.0),
           assemble_time_well(0.0),
+          communication_time_well(0.0),
           linear_solve_setup_time(0.0),
           linear_solve_time(0.0),
           update_time(0.0),
@@ -60,6 +61,7 @@ namespace Opm
         solver_time += sr.solver_time;
         assemble_time += sr.assemble_time;
         assemble_time_well += sr.assemble_time_well;
+        communication_time_well += sr.communication_time_well;
         update_time += sr.update_time;
         output_write_time += sr.output_write_time;
         total_time += sr.total_time;
@@ -108,6 +110,14 @@ namespace Opm
             if (failureReport) {
                 os << " (Failed: " << failureReport->assemble_time_well << "; "
                    << 100*failureReport->assemble_time_well/t << "%)";
+            }
+            os << std::endl;
+
+            t = communication_time_well + (failureReport ? failureReport->communication_time_well : 0.0);
+            os << "     Well communication time (seconds): " << t;
+            if (failureReport) {
+                os << " (Failed: " << failureReport->communication_time_well << "; "
+                   << 100*failureReport->communication_time_well/t << "%)";
             }
             os << std::endl;
 
